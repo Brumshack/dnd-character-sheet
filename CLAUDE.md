@@ -155,6 +155,53 @@ For the backend (when we get there):
 
 ---
 
+## Screenshot & Refinement Loop (Puppeteer)
+
+Claude can take screenshots of `index.html` automatically — no need for Andy to manually screenshot and paste. This enables a full self-directed edit → screenshot → review → fix loop.
+
+### Setup (already done)
+- Node.js is installed on Andy's machine
+- Puppeteer is installed: `npm install puppeteer` (run once in the project folder)
+- `screenshot.js` is in the project root (excluded from git via `.gitignore`)
+
+### How to take a screenshot
+```bash
+cd "/c/Users/abrum/OneDrive/Documents/D&D/Character Webiste Project"
+node screenshot.js
+```
+This saves `screenshot.png` in the project folder. Claude can then read it with the `Read` tool (it supports images).
+
+### The refinement loop
+When doing visual work on `index.html`:
+1. Make a set of edits
+2. Run `node screenshot.js`
+3. Read `screenshot.png` and also read `D&D Beyond Screenshot.png` for comparison
+4. Identify specific differences (spacing, font size, color, layout)
+5. Fix them
+6. Repeat from step 2
+7. Only check in with Andy when the result looks good, or when a design decision needs his input
+
+**Do at least 3 screenshot rounds per session before presenting results.** Don't stop after one pass.
+
+### screenshot.js contents (for reference / recreation if needed)
+```js
+const puppeteer = require('puppeteer');
+const path = require('path');
+(async () => {
+  const browser = await puppeteer.launch({ headless: 'new' });
+  const page = await browser.newPage();
+  await page.setViewport({ width: 1440, height: 900 });
+  const filePath = 'file:///' + path.resolve(__dirname, 'index.html').replace(/\\/g, '/');
+  await page.goto(filePath, { waitUntil: 'networkidle0' });
+  await new Promise(r => setTimeout(r, 1500));
+  await page.screenshot({ path: 'screenshot.png', fullPage: true });
+  await browser.close();
+  console.log('Screenshot saved.');
+})();
+```
+
+---
+
 ## Modal / Backend Setup (Not Active Yet)
 
 Modal secrets are already configured:
