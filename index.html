@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Raylock Flystone — Character Sheet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red:  #C53131; --red-dk: #a7080b;
+      --bg:   #FEFEFE; --page:   #f4f5f5;
+      --g900: #12181c; --g700:   #374045;
+      --g600: #525c63; --g500:   #75838b;
+      --g400: #a2acb2; --g300:   #c4cbce;
+      --g200: #dcdfe1; --g100:   #ecedee; --g50: #f9fafa;
+      --green:#1e7a2a; --purple: #8e44ad;
+      --font: 'Roboto', Helvetica, sans-serif;
+      --cond: 'Roboto Condensed', Roboto, Helvetica, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font); background: var(--page); color: var(--g900); font-size: 13px; line-height: 1.4; min-height: 100vh; }
+
+    /* ── Nav ── */
+    .site-nav { background: #26282a; height: 46px; display: flex; align-items: center; padding: 0 20px; position: sticky; top: 0; z-index: 100; }
+    .site-nav .logo { color: #fff; font-family: var(--cond); font-size: 17px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+    .site-nav .logo span { color: var(--red); }
+
+    /* ── Header ── */
+    .char-header { background: var(--bg); border-bottom: 3px solid var(--red); padding: 10px 20px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .portrait { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--red), #6b1010); border: 2px solid var(--g300); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+    .char-info h1 { font-family: var(--cond); font-size: 21px; font-weight: 700; }
+    .char-info .meta { font-size: 12px; color: var(--g500); margin-top: 2px; }
+    .char-info .meta strong { color: var(--g700); }
+    .hstats { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+    .hs { border: 1px solid var(--g300); border-radius: 4px; background: var(--bg); min-width: 62px; text-align: center; padding: 5px 10px 7px; }
+    .hs.hp-box { border-color: var(--red); }
+    .hs .v { font-family: var(--cond); font-size: 21px; font-weight: 700; line-height: 1; }
+    .hs.hp-box .v { color: var(--red); }
+    .hs .l { font-family: var(--cond); font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--g500); margin-top: 3px; }
+    .hp-row { background: var(--bg); border-bottom: 1px solid var(--g200); padding: 5px 20px 8px; display: flex; align-items: center; gap: 10px; }
+    .hp-lbl { font-family: var(--cond); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--g500); width: 60px; flex-shrink: 0; }
+    .hp-track { flex: 1; height: 9px; background: var(--g100); border-radius: 5px; overflow: hidden; border: 1px solid var(--g300); }
+    .hp-fill { height: 100%; background: var(--red); border-radius: 5px; }
+    .hp-txt { font-family: var(--cond); font-size: 12px; font-weight: 700; color: var(--red); white-space: nowrap; }
+
+    /* ── Card with red artistic border ── */
+    .card { background: var(--bg); border: 1px solid rgba(197,49,49,0.45); border-radius: 5px; overflow: hidden; box-shadow: 0 0 0 2px rgba(197,49,49,0.08), 0 1px 4px rgba(0,0,0,0.08); position: relative; }
+    .card::before, .card::after { content: ''; position: absolute; width: 10px; height: 10px; border-color: var(--red); border-style: solid; pointer-events: none; z-index: 1; }
+    .card::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; border-radius: 4px 0 0 0; }
+    .card::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; border-radius: 0 0 4px 0; }
+    .card-hd { background: var(--g900); color: #fff; font-family: var(--cond); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 5px 10px; }
+
+    /* ── Sheet layout ── */
+    .sheet { max-width: 1280px; margin: 14px auto; padding: 0 14px; display: grid; grid-template-columns: 182px 210px 1fr 232px; gap: 12px; align-items: start; }
+
+    /* ── Ability rows ── */
+    .ab-row { display: flex; align-items: center; padding: 7px 10px; gap: 8px; border-bottom: 1px solid var(--g100); transition: background .1s; }
+    .ab-row:last-child { border-bottom: none; }
+    .ab-row:hover { background: var(--g50); }
+    .ab-nm { font-family: var(--cond); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--g500); width: 28px; flex-shrink: 0; }
+    .ab-box { width: 36px; height: 36px; border: 2px solid var(--g300); border-radius: 4px; background: var(--g50); display: flex; align-items: center; justify-content: center; font-family: var(--cond); font-size: 19px; font-weight: 700; flex-shrink: 0; }
+    .ab-mod { font-family: var(--cond); font-size: 22px; font-weight: 700; width: 42px; text-align: center; }
+    .pos { color: var(--green); } .neg { color: var(--red); } .zero { color: var(--g500); }
+    .ab-save { margin-left: auto; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .sv-val { font-family: var(--cond); font-size: 11px; font-weight: 700; color: var(--g700); }
+    .sv-dot { width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--g400); }
+    .sv-dot.p { background: var(--red); border-color: var(--red); }
+
+    /* ── Skill rows ── */
+    .sk-row { display: flex; align-items: center; padding: 4px 10px; gap: 7px; font-size: 12px; border-bottom: 1px solid var(--g100); transition: background .1s; }
+    .sk-row:last-child { border-bottom: none; }
+    .sk-row:hover { background: var(--g50); }
+    .sk-dot { width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--g400); flex-shrink: 0; }
+    .sk-dot.p { background: var(--red); border-color: var(--red); }
+    .sk-val { font-family: var(--cond); font-weight: 700; font-size: 12px; width: 24px; text-align: right; flex-shrink: 0; }
+    .sk-nm { flex: 1; color: var(--g700); }
+    .sk-ab { font-size: 9px; color: var(--g400); text-transform: uppercase; font-family: var(--cond); }
+    .passive { display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; border-top: 1px solid var(--g200); background: var(--g50); }
+    .passive .lbl { font-family: var(--cond); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--g500); }
+    .passive .val { font-family: var(--cond); font-size: 17px; font-weight: 700; }
+
+    /* ── Stat rows ── */
+    .st-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; border-bottom: 1px solid var(--g100); }
+    .st-row:last-child { border-bottom: none; }
+    .st-lbl { font-family: var(--cond); font-size: 12px; color: var(--g600); }
+    .st-val { font-family: var(--cond); font-size: 15px; font-weight: 700; }
+
+    /* ── Spell slots ── */
+    .ss-grid { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .ss-row { display: flex; align-items: center; gap: 8px; }
+    .ss-lbl { font-family: var(--cond); font-size: 11px; color: var(--g500); text-transform: uppercase; width: 52px; flex-shrink: 0; }
+    .ss-pip { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--purple); background: var(--purple); cursor: pointer; transition: background .15s; }
+    .ss-pip.used { background: transparent; }
+
+    /* ── Tags ── */
+    .tags { padding: 10px; display: flex; flex-wrap: wrap; gap: 4px; }
+    .tag { background: var(--g100); border: 1px solid var(--g200); color: var(--g700); font-size: 11px; font-family: var(--cond); padding: 3px 8px; border-radius: 3px; }
+
+    /* ── Death saves ── */
+    .death-row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; }
+    .death-lbl { font-family: var(--cond); font-size: 11px; color: var(--g500); width: 62px; flex-shrink: 0; }
+    .d-pip { width: 13px; height: 13px; border-radius: 50%; border: 2px solid var(--g400); }
+    .d-pip.s { border-color: var(--green); } .d-pip.f { border-color: var(--red); }
+
+    /* ════════════════════════════════════════
+       MAIN TABS
+    ════════════════════════════════════════ */
+    .tab-card { background: var(--bg); border: 1px solid rgba(197,49,49,0.45); border-radius: 5px; overflow: hidden; box-shadow: 0 0 0 2px rgba(197,49,49,0.08), 0 1px 4px rgba(0,0,0,0.08); position: relative; display: flex; flex-direction: column; }
+    .tab-card::before, .tab-card::after { content: ''; position: absolute; width: 10px; height: 10px; border-color: var(--red); border-style: solid; pointer-events: none; z-index: 2; }
+    .tab-card::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; border-radius: 4px 0 0 0; }
+    .tab-card::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; border-radius: 0 0 4px 0; }
+
+    .main-tab-bar { display: flex; border-bottom: 2px solid var(--g200); background: var(--g50); flex-shrink: 0; overflow-x: auto; }
+    .main-tab-bar::-webkit-scrollbar { height: 0; }
+    .mtab { padding: 9px 13px; font-family: var(--cond); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--g500); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color .15s, border-color .15s; white-space: nowrap; user-select: none; }
+    .mtab:hover { color: var(--g900); }
+    .mtab.active { color: var(--red); border-bottom-color: var(--red); }
+
+    .main-pane { display: none; }
+    .main-pane.active { display: block; }
+
+    /* ════════════════════════════════════════
+       SUB TABS (nested inside each main pane)
+    ════════════════════════════════════════ */
+    .sub-tab-bar { display: flex; gap: 2px; padding: 8px 12px 0; border-bottom: 1px solid var(--g200); background: var(--bg); flex-wrap: wrap; }
+    .stab { padding: 5px 12px; font-family: var(--cond); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--g500); cursor: pointer; border-radius: 3px 3px 0 0; border: 1px solid transparent; border-bottom: none; transition: all .15s; user-select: none; margin-bottom: -1px; }
+    .stab:hover { color: var(--g900); background: var(--g100); }
+    .stab.active { color: var(--red); background: var(--bg); border-color: var(--g200); border-bottom-color: var(--bg); }
+
+    .sub-pane { display: none; padding: 12px; }
+    .sub-pane.active { display: block; }
+
+    /* ── Search bar ── */
+    .search-wrap { margin-bottom: 10px; position: relative; }
+    .search-wrap input { width: 100%; padding: 7px 10px 7px 30px; border: 1px solid var(--g300); border-radius: 4px; font-family: var(--font); font-size: 13px; color: var(--g900); background: var(--g50); outline: none; transition: border-color .15s; }
+    .search-wrap input:focus { border-color: var(--red); background: var(--bg); }
+    .search-wrap::before { content: '🔍'; position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 12px; pointer-events: none; }
+
+    /* ── Attack table ── */
+    .atk-tbl { width: 100%; border-collapse: collapse; font-family: var(--cond); }
+    .atk-tbl thead tr { background: var(--g50); border-bottom: 2px solid var(--g200); }
+    .atk-tbl th { padding: 5px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--g500); text-align: left; }
+    .atk-tbl td { padding: 8px 10px; border-bottom: 1px solid var(--g100); font-size: 13px; color: var(--g700); }
+    .atk-tbl tr:last-child td { border-bottom: none; }
+    .atk-tbl tr:hover td { background: var(--g50); }
+    .atk-nm { font-weight: 700; color: var(--g900); }
+    .atk-hit { color: var(--green); font-weight: 700; font-size: 14px; }
+    .atk-dmg { color: var(--red); font-weight: 700; }
+
+    /* ── Feature items ── */
+    .feat { padding: 9px 12px; border-bottom: 1px solid var(--g100); }
+    .feat:last-child { border-bottom: none; }
+    .feat h4 { font-family: var(--cond); font-size: 13px; font-weight: 700; color: var(--g900); display: flex; align-items: center; gap: 6px; }
+    .feat h4::before { content: ''; display: inline-block; width: 3px; height: 13px; background: var(--red); border-radius: 2px; flex-shrink: 0; }
+    .feat p { font-size: 12px; color: var(--g600); margin-top: 3px; padding-left: 9px; line-height: 1.5; }
+    .feat .badge { display: inline-block; background: rgba(197,49,49,0.1); border: 1px solid rgba(197,49,49,0.3); color: var(--red); font-size: 10px; font-family: var(--cond); padding: 1px 6px; border-radius: 3px; margin-left: 6px; vertical-align: middle; }
+
+    /* ── Spell card ── */
+    .spell-item { padding: 8px 12px; border-bottom: 1px solid var(--g100); display: flex; gap: 10px; align-items: flex-start; }
+    .spell-item:last-child { border-bottom: none; }
+    .spell-item:hover { background: var(--g50); }
+    .spell-level-badge { font-family: var(--cond); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--purple); border: 1px solid var(--purple); border-radius: 3px; padding: 2px 5px; flex-shrink: 0; white-space: nowrap; }
+    .spell-info h4 { font-family: var(--cond); font-size: 13px; font-weight: 700; color: var(--g900); }
+    .spell-info .spell-meta { font-size: 11px; color: var(--g500); margin-top: 1px; }
+    .spell-info p { font-size: 12px; color: var(--g600); margin-top: 3px; line-height: 1.5; }
+    .spell-prepared { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--purple); flex-shrink: 0; margin-top: 3px; background: var(--purple); }
+
+    /* ── Inventory table ── */
+    .inv-tbl { width: 100%; border-collapse: collapse; font-family: var(--cond); }
+    .inv-tbl th { padding: 5px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--g500); text-align: left; background: var(--g50); border-bottom: 2px solid var(--g200); }
+    .inv-tbl td { padding: 7px 10px; border-bottom: 1px solid var(--g100); font-size: 13px; color: var(--g700); }
+    .inv-tbl tr:last-child td { border-bottom: none; }
+    .inv-tbl tr:hover td { background: var(--g50); }
+    .inv-foot { padding: 8px 12px; background: var(--g50); font-family: var(--cond); font-size: 11px; color: var(--g500); border-top: 1px solid var(--g200); }
+
+    /* ── Background / Notes ── */
+    .bg-block { padding: 10px 12px; border-bottom: 1px solid var(--g100); }
+    .bg-block:last-child { border-bottom: none; }
+    .bg-block h4 { font-family: var(--cond); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--g500); margin-bottom: 4px; }
+    .bg-block p { font-size: 13px; color: var(--g700); line-height: 1.6; }
+    .appearance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px 12px; }
+    .app-field { display: flex; flex-direction: column; gap: 2px; }
+    .app-field label { font-family: var(--cond); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--g500); }
+    .app-field span { font-size: 13px; color: var(--g700); padding: 4px 8px; background: var(--g50); border: 1px solid var(--g200); border-radius: 3px; }
+
+    .notes-area { width: 100%; min-height: 180px; border: 1px solid var(--g200); border-radius: 4px; padding: 10px; font-family: var(--font); font-size: 13px; color: var(--g700); resize: vertical; outline: none; background: var(--g50); }
+    .notes-area:focus { border-color: var(--red); background: var(--bg); }
+
+    /* ── Section heading within sub-pane ── */
+    .sec-hd { font-family: var(--cond); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--g500); padding-bottom: 5px; margin-bottom: 6px; border-bottom: 1px solid var(--g200); }
+    .sec-hd:not(:first-child) { margin-top: 14px; }
+
+    /* ── Limited use tracker ── */
+    .lu-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid var(--g100); }
+    .lu-item:last-child { border-bottom: none; }
+    .lu-nm { font-family: var(--cond); font-size: 13px; font-weight: 700; color: var(--g900); }
+    .lu-desc { font-size: 11px; color: var(--g500); margin-top: 1px; }
+    .lu-pips { display: flex; gap: 4px; }
+    .lu-pip { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--red); background: var(--red); cursor: pointer; transition: background .15s; }
+    .lu-pip.used { background: transparent; }
+
+    /* ── Conditions ── */
+    .cond-empty { padding: 12px; font-size: 12px; color: var(--g400); font-style: italic; text-align: center; }
+  </style>
+</head>
+<body>
+
+<nav class="site-nav"><div class="logo">D<span>&</span>D Character Sheet</div></nav>
+
+<!-- Header -->
+<div class="char-header">
+  <div class="portrait">🧙</div>
+  <div class="char-info">
+    <h1>Raylock Flystone</h1>
+    <div class="meta"><strong>Tiefling</strong> · <strong>Warlock</strong> (The Great Old One) · <strong>Level 5</strong> &nbsp;·&nbsp; XP: 6,500 / 14,000</div>
+  </div>
+  <div class="hstats">
+    <div class="hs"><div class="v">+3</div><div class="l">Proficiency</div></div>
+    <div class="hs"><div class="v">+2</div><div class="l">Initiative</div></div>
+    <div class="hs"><div class="v">13</div><div class="l">Armor Class</div></div>
+    <div class="hs"><div class="v">30</div><div class="l">Speed</div></div>
+    <div class="hs hp-box"><div class="v">38</div><div class="l">HP Max</div></div>
+    <div class="hs"><div class="v">13</div><div class="l">Passive Perc</div></div>
+  </div>
+</div>
+<div class="hp-row">
+  <div class="hp-lbl">Hit Points</div>
+  <div class="hp-track"><div class="hp-fill" style="width:100%"></div></div>
+  <div class="hp-txt">38 / 38</div>
+</div>
+
+<!-- Sheet -->
+<div class="sheet">
+
+  <!-- COL 1 -->
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    <div class="card">
+      <div class="card-hd">Ability Scores</div>
+      <div class="ab-row"><div class="ab-nm">STR</div><div class="ab-box">8</div><div class="ab-mod neg">−1</div><div class="ab-save"><div class="sv-val">−1</div><div class="sv-dot"></div></div></div>
+      <div class="ab-row"><div class="ab-nm">DEX</div><div class="ab-box">14</div><div class="ab-mod pos">+2</div><div class="ab-save"><div class="sv-val">+2</div><div class="sv-dot"></div></div></div>
+      <div class="ab-row"><div class="ab-nm">CON</div><div class="ab-box">14</div><div class="ab-mod pos">+2</div><div class="ab-save"><div class="sv-val">+2</div><div class="sv-dot"></div></div></div>
+      <div class="ab-row"><div class="ab-nm">INT</div><div class="ab-box">12</div><div class="ab-mod pos">+1</div><div class="ab-save"><div class="sv-val">+1</div><div class="sv-dot"></div></div></div>
+      <div class="ab-row"><div class="ab-nm">WIS</div><div class="ab-box">10</div><div class="ab-mod zero">+0</div><div class="ab-save"><div class="sv-val">+3</div><div class="sv-dot p"></div></div></div>
+      <div class="ab-row"><div class="ab-nm">CHA</div><div class="ab-box">18</div><div class="ab-mod pos">+4</div><div class="ab-save"><div class="sv-val">+7</div><div class="sv-dot p"></div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-hd">Spell Slots</div>
+      <div class="ss-grid">
+        <div class="ss-row"><div class="ss-lbl">3rd (2)</div><div class="ss-pip"></div><div class="ss-pip"></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd">Combat</div>
+      <div class="st-row"><div class="st-lbl">Max HP</div><div class="st-val">38</div></div>
+      <div class="st-row"><div class="st-lbl">Current HP</div><div class="st-val" style="color:var(--red)">38</div></div>
+      <div class="st-row"><div class="st-lbl">Temp HP</div><div class="st-val">0</div></div>
+      <div class="st-row"><div class="st-lbl">Hit Dice</div><div class="st-val">5d8</div></div>
+    </div>
+  </div>
+
+  <!-- COL 2 -->
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    <div class="card">
+      <div class="card-hd">Saving Throws</div>
+      <div class="sk-row"><div class="sk-dot"></div><div class="sk-val neg">−1</div><div class="sk-nm">Strength</div></div>
+      <div class="sk-row"><div class="sk-dot"></div><div class="sk-val pos">+2</div><div class="sk-nm">Dexterity</div></div>
+      <div class="sk-row"><div class="sk-dot"></div><div class="sk-val pos">+2</div><div class="sk-nm">Constitution</div></div>
+      <div class="sk-row"><div class="sk-dot"></div><div class="sk-val pos">+1</div><div class="sk-nm">Intelligence</div></div>
+      <div class="sk-row"><div class="sk-dot p"></div><div class="sk-val pos">+3</div><div class="sk-nm">Wisdom</div></div>
+      <div class="sk-row"><div class="sk-dot p"></div><div class="sk-val pos">+7</div><div class="sk-nm">Charisma</div></div>
+      <div class="passive"><div class="lbl">Passive Perception</div><div class="val">13</div></div>
+    </div>
+    <div class="card">
+      <div class="card-hd">Skills</div>
+      <div class="sk-row"><div class="sk-dot"></div><div class="sk-val neg">−1</div><div class="sk-nm">Athletics</div><div class="sk-ab">STR</div></div>
+      <div class="sk-row"><div class="sk-dot"></div><div class="sk-val pos">+2</div><div class="sk-nm">Acrobatics</div><div class="sk-ab">DEX</div></div>
+      <div class="sk-row"><div class="sk-dot"></div><div class="sk-val pos">+2</div><div class="sk-nm">Sleight of Hand</div><div class="sk-ab">DEX</div></div>
+      <div class="sk-row"><div class="sk-dot"></div><div class="sk-val pos">+2</div><div class="sk-nm">Stealth</div><div class="sk-ab">DEX</div></div>
+      <div class="sk-row"><div class="sk-dot p"></div><div class="sk-val pos">+7</div><div class="sk-nm">Arcana</div><div class="sk-ab">INT</div></div>
+      <div class="sk-row"><div class="sk-dot"></div><div class="sk-val pos">+1</div><div class="sk-nm">History</div><div class="sk-ab">INT</div></div>
+      <div class="sk-row"><div class="sk-dot"></div><div class="sk-val pos">+1</div><div class="sk-nm">Investigation</div><div class="sk-ab">INT</div></div>
+      <div class="sk-row"><div class="sk-dot"></div><div class="sk-val pos">+1</div><div class="sk-nm">Nature</div><div class="sk-ab">INT</div></div>
+      <div class="sk-row"><div class="sk-dot"></div><div class="sk-val pos">+1</div><div class="sk-nm">Religion</div><div class="sk-ab">INT</div></div>
+      <div class="sk-row"><div class="sk-dot"></div><div class="sk-val zero">+0</div><div class="sk-nm">Animal Handling</div><div class="sk-ab">WIS</div></div>
+      <div class="sk-row"><div class="sk-dot"></div><div class="sk-val zero">+0</div><div class="sk-nm">Insight</div><div class="sk-ab">WIS</div></div>
+      <div class="sk-row"><div class="sk-dot"></div><div class="sk-val zero">+0</div><div class="sk-nm">Medicine</div><div class="sk-ab">WIS</div></div>
+      <div class="sk-row"><div class="sk-dot"></div><div class="sk-val zero">+0</div><div class="sk-nm">Perception</div><div class="sk-ab">WIS</div></div>
+      <div class="sk-row"><div class="sk-dot"></div><div class="sk-val zero">+0</div><div class="sk-nm">Survival</div><div class="sk-ab">WIS</div></div>
+      <div class="sk-row"><div class="sk-dot p"></div><div class="sk-val pos">+7</div><div class="sk-nm">Deception</div><div class="sk-ab">CHA</div></div>
+      <div class="sk-row"><div class="sk-dot p"></div><div class="sk-val pos">+7</div><div class="sk-nm">Intimidation</div><div class="sk-ab">CHA</div></div>
+      <div class="sk-row"><div class="sk-dot"></div><div class="sk-val pos">+4</div><div class="sk-nm">Performance</div><div class="sk-ab">CHA</div></div>
+      <div class="sk-row"><div class="sk-dot p"></div><div class="sk-val pos">+7</div><div class="sk-nm">Persuasion</div><div class="sk-ab">CHA</div></div>
+    </div>
+  </div>
+
+  <!-- COL 3: Main tabbed box -->
+  <div class="tab-card">
+    <div class="main-tab-bar">
+      <div class="mtab active" data-main="actions">Actions</div>
+      <div class="mtab" data-main="spells">Spells</div>
+      <div class="mtab" data-main="inventory">Inventory</div>
+      <div class="mtab" data-main="features">Features &amp; Traits</div>
+      <div class="mtab" data-main="background">Background</div>
+      <div class="mtab" data-main="notes">Notes</div>
+      <div class="mtab" data-main="extras">Extras</div>
+    </div>
+
+    <!-- ═══ ACTIONS ═══ -->
+    <div class="main-pane active" id="mp-actions">
+      <div class="sub-tab-bar">
+        <div class="stab active" data-group="actions" data-sub="all">All</div>
+        <div class="stab" data-group="actions" data-sub="attack">Attack</div>
+        <div class="stab" data-group="actions" data-sub="action">Action</div>
+        <div class="stab" data-group="actions" data-sub="bonus">Bonus Action</div>
+        <div class="stab" data-group="actions" data-sub="reaction">Reaction</div>
+        <div class="stab" data-group="actions" data-sub="other">Other</div>
+        <div class="stab" data-group="actions" data-sub="limited">Limited Use</div>
+      </div>
+
+      <!-- All / Attack -->
+      <div class="sub-pane active" id="sp-actions-all">
+        <div class="sec-hd">Attacks · Attacks per Action: 1</div>
+        <table class="atk-tbl">
+          <thead><tr><th>Attack</th><th>Hit / DC</th><th>Damage</th><th>Type</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="atk-nm">Eldritch Blast</td><td class="atk-hit">+7</td><td class="atk-dmg">1d10+4</td><td>Force</td><td style="font-size:11px;color:var(--g500)">2 beams · Agonizing Blast</td></tr>
+            <tr><td class="atk-nm">Quarterstaff</td><td class="atk-hit">+2</td><td class="atk-dmg">1d6−1</td><td>Bludgeoning</td><td style="font-size:11px;color:var(--g500)">Versatile (1d8)</td></tr>
+            <tr><td class="atk-nm">Dagger</td><td class="atk-hit">+5</td><td class="atk-dmg">1d4+2</td><td>Piercing</td><td style="font-size:11px;color:var(--g500)">Finesse, thrown 20/60</td></tr>
+          </tbody>
+        </table>
+        <div class="sec-hd">Actions</div>
+        <div class="feat">
+          <h4>Dash</h4><p>Double your movement speed for the turn.</p>
+        </div>
+        <div class="feat">
+          <h4>Disengage</h4><p>Your movement doesn't provoke opportunity attacks for the rest of the turn.</p>
+        </div>
+        <div class="feat">
+          <h4>Help</h4><p>Give an ally advantage on their next ability check or attack roll.</p>
+        </div>
+        <div class="sec-hd">Bonus Actions</div>
+        <div class="feat">
+          <h4>Hex <span class="badge">Concentration · 1 hr</span></h4>
+          <p>Curse a creature within 90 ft. It takes 1d6 extra Necrotic on your hits and has disadvantage on one ability check type. Moves to new target if original dies (bonus action).</p>
+        </div>
+        <div class="sec-hd">Reactions</div>
+        <div class="feat">
+          <h4>Hellish Rebuke <span class="badge">1/Day</span></h4>
+          <p>When damaged, deal 2d10 fire damage back. DEX save DC 11 for half. (Tiefling)</p>
+        </div>
+        <div class="sec-hd">Limited Use</div>
+        <div class="lu-item"><div><div class="lu-nm">Hellish Rebuke</div><div class="lu-desc">Recharges on long rest</div></div><div class="lu-pips"><div class="lu-pip"></div></div></div>
+        <div class="lu-item"><div><div class="lu-nm">Darkness (Tiefling)</div><div class="lu-desc">Recharges on long rest</div></div><div class="lu-pips"><div class="lu-pip"></div></div></div>
+      </div>
+
+      <div class="sub-pane" id="sp-actions-attack">
+        <div class="sec-hd">Attacks · Attacks per Action: 1</div>
+        <table class="atk-tbl">
+          <thead><tr><th>Attack</th><th>Hit / DC</th><th>Damage</th><th>Type</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="atk-nm">Eldritch Blast</td><td class="atk-hit">+7</td><td class="atk-dmg">1d10+4</td><td>Force</td><td style="font-size:11px;color:var(--g500)">2 beams · Agonizing Blast</td></tr>
+            <tr><td class="atk-nm">Quarterstaff</td><td class="atk-hit">+2</td><td class="atk-dmg">1d6−1</td><td>Bludgeoning</td><td style="font-size:11px;color:var(--g500)">Versatile (1d8)</td></tr>
+            <tr><td class="atk-nm">Dagger</td><td class="atk-hit">+5</td><td class="atk-dmg">1d4+2</td><td>Piercing</td><td style="font-size:11px;color:var(--g500)">Finesse, thrown 20/60</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub-pane" id="sp-actions-action">
+        <div class="feat"><h4>Eldritch Blast</h4><p>Cast Eldritch Blast — ranged spell attack, +7 to hit, two 1d10+4 Force beams at level 5, range 120 ft.</p></div>
+        <div class="feat"><h4>Dash</h4><p>Double your movement speed for the turn.</p></div>
+        <div class="feat"><h4>Disengage</h4><p>Your movement doesn't provoke opportunity attacks for the rest of the turn.</p></div>
+        <div class="feat"><h4>Help</h4><p>Give an ally advantage on their next ability check or attack roll against a target you can see.</p></div>
+        <div class="feat"><h4>Hide</h4><p>Make a DEX (Stealth) check to become hidden.</p></div>
+        <div class="feat"><h4>Use Object / Interact</h4><p>Interact with a second object (first is free with movement).</p></div>
+      </div>
+
+      <div class="sub-pane" id="sp-actions-bonus">
+        <div class="feat"><h4>Hex <span class="badge">Concentration · 1 hr</span></h4><p>Curse a creature within 90 ft. +1d6 Necrotic on hits, disadvantage on chosen ability checks. Bonus action to move hex if target dies.</p></div>
+      </div>
+
+      <div class="sub-pane" id="sp-actions-reaction">
+        <div class="feat"><h4>Hellish Rebuke <span class="badge">1/Day</span></h4><p>When damaged by a creature, deal 2d10 Fire damage back. DEX save DC 11 for half. (Tiefling racial)</p></div>
+        <div class="feat"><h4>Opportunity Attack</h4><p>When a hostile creature leaves your reach, make one melee attack against it.</p></div>
+      </div>
+
+      <div class="sub-pane" id="sp-actions-other">
+        <div class="feat"><h4>Grapple</h4><p>STR (Athletics) check contested by STR (Athletics) or DEX (Acrobatics). On success, target is grappled.</p></div>
+        <div class="feat"><h4>Shove</h4><p>STR (Athletics) contested check. On success, push 5 ft or knock prone.</p></div>
+        <div class="feat"><h4>Ready</h4><p>Choose a trigger and an action. When trigger occurs, use your reaction to take the action.</p></div>
+      </div>
+
+      <div class="sub-pane" id="sp-actions-limited">
+        <div class="lu-item"><div><div class="lu-nm">Hellish Rebuke</div><div class="lu-desc">1/Day · Recharges on long rest · Tiefling</div></div><div class="lu-pips"><div class="lu-pip"></div></div></div>
+        <div class="lu-item"><div><div class="lu-nm">Darkness</div><div class="lu-desc">1/Day · Recharges on long rest · Tiefling</div></div><div class="lu-pips"><div class="lu-pip"></div></div></div>
+        <div class="lu-item"><div><div class="lu-nm">Pact Spell Slots (3rd)</div><div class="lu-desc">2 slots · Recharge on short or long rest</div></div><div class="lu-pips"><div class="lu-pip"></div><div class="lu-pip"></div></div></div>
+      </div>
+    </div>
+
+    <!-- ═══ SPELLS ═══ -->
+    <div class="main-pane" id="mp-spells">
+      <div class="sub-tab-bar">
+        <div class="stab active" data-group="spells" data-sub="all">All</div>
+        <div class="stab" data-group="spells" data-sub="cantrip">Cantrips</div>
+        <div class="stab" data-group="spells" data-sub="3rd">3rd Level</div>
+        <div class="stab" data-group="spells" data-sub="ritual">Ritual</div>
+        <div class="stab" data-group="spells" data-sub="conc">Concentration</div>
+      </div>
+      <div class="sub-pane active" id="sp-spells-all">
+        <div class="search-wrap"><input type="text" placeholder="Search spells…" id="spell-search"></div>
+        <div id="spell-list">
+          <div class="sec-hd">Cantrips (At Will)</div>
+          <div class="spell-item" data-spell-name="eldritch blast">
+            <div class="spell-prepared"></div>
+            <div style="flex-shrink:0"><div class="spell-level-badge">Cantrip</div></div>
+            <div class="spell-info"><h4>Eldritch Blast</h4><div class="spell-meta">Evocation · 1 Action · 120 ft · Instantaneous</div><p>Ranged spell attack. +7 to hit. Two beams each dealing 1d10+4 Force damage at level 5.</p></div>
+          </div>
+          <div class="spell-item" data-spell-name="prestidigitation">
+            <div class="spell-prepared"></div>
+            <div style="flex-shrink:0"><div class="spell-level-badge">Cantrip</div></div>
+            <div class="spell-info"><h4>Prestidigitation</h4><div class="spell-meta">Transmutation · 1 Action · 10 ft · Up to 1 hour</div><p>Minor magical tricks — lights, smells, flavors, cleaning, minor marks, knickknacks.</p></div>
+          </div>
+          <div class="spell-item" data-spell-name="thaumaturgy">
+            <div class="spell-prepared"></div>
+            <div style="flex-shrink:0"><div class="spell-level-badge">Cantrip</div></div>
+            <div class="spell-info"><h4>Thaumaturgy</h4><div class="spell-meta">Transmutation · 1 Action · 30 ft · Up to 1 minute · Tiefling</div><p>Manifest a minor wonder — booming voice, flickering eyes, tremors, open doors, eerie sounds.</p></div>
+          </div>
+          <div class="sec-hd">3rd Level (Slots: 2 / 2)</div>
+          <div class="spell-item" data-spell-name="hunger of hadar">
+            <div class="spell-prepared"></div>
+            <div style="flex-shrink:0"><div class="spell-level-badge">3rd</div></div>
+            <div class="spell-info"><h4>Hunger of Hadar</h4><div class="spell-meta">Conjuration · 1 Action · 150 ft · Conc. 1 min</div><p>20-ft radius void. Creatures inside are blinded. 2d6 Cold on their turn; 2d6 Acid if they end turn there.</p></div>
+          </div>
+          <div class="spell-item" data-spell-name="hypnotic pattern">
+            <div class="spell-prepared"></div>
+            <div style="flex-shrink:0"><div class="spell-level-badge">3rd</div></div>
+            <div class="spell-info"><h4>Hypnotic Pattern</h4><div class="spell-meta">Illusion · 1 Action · 120 ft · Conc. 1 min</div><p>30-ft cube. WIS save DC 15 or charmed and incapacitated.</p></div>
+          </div>
+          <div class="spell-item" data-spell-name="counterspell">
+            <div class="spell-prepared"></div>
+            <div style="flex-shrink:0"><div class="spell-level-badge">3rd</div></div>
+            <div class="spell-info"><h4>Counterspell</h4><div class="spell-meta">Abjuration · Reaction · 60 ft · Instantaneous</div><p>Interrupt a spell of 3rd level or lower automatically. Higher: INT check DC 10 + spell level.</p></div>
+          </div>
+          <div class="spell-item" data-spell-name="hex">
+            <div class="spell-prepared"></div>
+            <div style="flex-shrink:0"><div class="spell-level-badge">1st→3rd</div></div>
+            <div class="spell-info"><h4>Hex</h4><div class="spell-meta">Enchantment · Bonus Action · 90 ft · Conc. up to 1 hr (3rd slot)</div><p>Curse a target. +1d6 Necrotic on hits. Disadvantage on one ability check type.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="sub-pane" id="sp-spells-cantrip">
+        <div class="spell-item"><div class="spell-prepared"></div><div style="flex-shrink:0"><div class="spell-level-badge">Cantrip</div></div><div class="spell-info"><h4>Eldritch Blast</h4><div class="spell-meta">Evocation · 1 Action · 120 ft</div><p>+7 to hit. Two beams, 1d10+4 Force each.</p></div></div>
+        <div class="spell-item"><div class="spell-prepared"></div><div style="flex-shrink:0"><div class="spell-level-badge">Cantrip</div></div><div class="spell-info"><h4>Prestidigitation</h4><div class="spell-meta">Transmutation · 1 Action · 10 ft</div><p>Minor magical tricks.</p></div></div>
+        <div class="spell-item"><div class="spell-prepared"></div><div style="flex-shrink:0"><div class="spell-level-badge">Cantrip</div></div><div class="spell-info"><h4>Thaumaturgy</h4><div class="spell-meta">Transmutation · 1 Action · 30 ft · Tiefling</div><p>Manifest a minor wonder.</p></div></div>
+      </div>
+      <div class="sub-pane" id="sp-spells-3rd">
+        <div class="spell-item"><div class="spell-prepared"></div><div style="flex-shrink:0"><div class="spell-level-badge">3rd</div></div><div class="spell-info"><h4>Hunger of Hadar</h4><div class="spell-meta">Conjuration · 1 Action · Conc. 1 min</div><p>20-ft void. Blinded, 2d6 Cold/Acid.</p></div></div>
+        <div class="spell-item"><div class="spell-prepared"></div><div style="flex-shrink:0"><div class="spell-level-badge">3rd</div></div><div class="spell-info"><h4>Hypnotic Pattern</h4><div class="spell-meta">Illusion · 1 Action · Conc. 1 min</div><p>WIS DC 15 or charmed + incapacitated.</p></div></div>
+        <div class="spell-item"><div class="spell-prepared"></div><div style="flex-shrink:0"><div class="spell-level-badge">3rd</div></div><div class="spell-info"><h4>Counterspell</h4><div class="spell-meta">Abjuration · Reaction · 60 ft</div><p>Negate spells 3rd or lower automatically.</p></div></div>
+        <div class="spell-item"><div class="spell-prepared"></div><div style="flex-shrink:0"><div class="spell-level-badge">1st→3rd</div></div><div class="spell-info"><h4>Hex</h4><div class="spell-meta">Enchantment · Bonus Action · Conc. 1 hr</div><p>+1d6 Necrotic on hits, disadvantage on ability check.</p></div></div>
+      </div>
+      <div class="sub-pane" id="sp-spells-ritual"><p style="padding:12px;color:var(--g500);font-style:italic;">No ritual spells known.</p></div>
+      <div class="sub-pane" id="sp-spells-conc">
+        <div class="spell-item"><div class="spell-prepared"></div><div style="flex-shrink:0"><div class="spell-level-badge">3rd</div></div><div class="spell-info"><h4>Hex</h4><div class="spell-meta">Conc. up to 1 hr</div><p>+1d6 Necrotic on hits.</p></div></div>
+        <div class="spell-item"><div class="spell-prepared"></div><div style="flex-shrink:0"><div class="spell-level-badge">3rd</div></div><div class="spell-info"><h4>Hunger of Hadar</h4><div class="spell-meta">Conc. 1 min</div><p>20-ft void of darkness.</p></div></div>
+        <div class="spell-item"><div class="spell-prepared"></div><div style="flex-shrink:0"><div class="spell-level-badge">3rd</div></div><div class="spell-info"><h4>Hypnotic Pattern</h4><div class="spell-meta">Conc. 1 min</div><p>Charmed + incapacitated on failed WIS save.</p></div></div>
+      </div>
+    </div>
+
+    <!-- ═══ INVENTORY ═══ -->
+    <div class="main-pane" id="mp-inventory">
+      <div class="sub-tab-bar">
+        <div class="stab active" data-group="inventory" data-sub="all">All</div>
+        <div class="stab" data-group="inventory" data-sub="equipment">Equipment</div>
+        <div class="stab" data-group="inventory" data-sub="backpack">Backpack</div>
+        <div class="stab" data-group="inventory" data-sub="component">Component Pouch</div>
+        <div class="stab" data-group="inventory" data-sub="attunement">Attunement</div>
+        <div class="stab" data-group="inventory" data-sub="other">Other Possessions</div>
+      </div>
+      <div class="sub-pane active" id="sp-inventory-all">
+        <div class="search-wrap"><input type="text" placeholder="Search inventory…" id="inv-search"></div>
+        <div id="inv-list">
+          <div class="sec-hd">Equipped</div>
+          <table class="inv-tbl">
+            <thead><tr><th>Item</th><th>Qty</th><th>Weight</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr data-item="quarterstaff"><td>Quarterstaff</td><td>1</td><td>4 lb</td><td>Versatile (1d8)</td></tr>
+              <tr data-item="leather armor"><td>Leather Armor</td><td>1</td><td>10 lb</td><td>AC 11 + DEX mod</td></tr>
+              <tr data-item="arcane focus"><td>Arcane Focus (Orb)</td><td>1</td><td>3 lb</td><td>Spellcasting focus</td></tr>
+            </tbody>
+          </table>
+          <div class="sec-hd">Backpack</div>
+          <table class="inv-tbl">
+            <thead><tr><th>Item</th><th>Qty</th><th>Weight</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr data-item="dagger"><td>Dagger</td><td>2</td><td>2 lb</td><td>Finesse, thrown</td></tr>
+              <tr data-item="scholar's pack"><td>Scholar's Pack</td><td>1</td><td>10 lb</td><td>Book, ink, parchment, hooded lantern, oil, rations, waterskin, rope</td></tr>
+              <tr data-item="calligrapher"><td>Calligrapher's Supplies</td><td>1</td><td>5 lb</td><td>Proficient</td></tr>
+            </tbody>
+          </table>
+          <div class="sec-hd">Currency</div>
+          <table class="inv-tbl">
+            <thead><tr><th>Type</th><th>Amount</th><th></th><th></th></tr></thead>
+            <tbody>
+              <tr><td>Gold Pieces (GP)</td><td>48</td><td></td><td></td></tr>
+              <tr><td>Silver Pieces (SP)</td><td>12</td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="inv-foot">Total Weight: 34 lb &nbsp;·&nbsp; Carrying Capacity: 120 lb (STR × 15)</div>
+      </div>
+      <div class="sub-pane" id="sp-inventory-equipment">
+        <table class="inv-tbl"><thead><tr><th>Item</th><th>Qty</th><th>Weight</th><th>Notes</th></tr></thead><tbody>
+          <tr><td>Quarterstaff</td><td>1</td><td>4 lb</td><td>Versatile (1d8)</td></tr>
+          <tr><td>Leather Armor</td><td>1</td><td>10 lb</td><td>AC 11 + DEX mod</td></tr>
+          <tr><td>Arcane Focus (Orb)</td><td>1</td><td>3 lb</td><td>Spellcasting focus</td></tr>
+        </tbody></table>
+      </div>
+      <div class="sub-pane" id="sp-inventory-backpack">
+        <table class="inv-tbl"><thead><tr><th>Item</th><th>Qty</th><th>Weight</th><th>Notes</th></tr></thead><tbody>
+          <tr><td>Dagger</td><td>2</td><td>2 lb</td><td>Finesse, thrown 20/60</td></tr>
+          <tr><td>Scholar's Pack</td><td>1</td><td>10 lb</td><td>Book, ink, parchment, lantern, oil, rations, waterskin, rope</td></tr>
+          <tr><td>Calligrapher's Supplies</td><td>1</td><td>5 lb</td><td>Proficient</td></tr>
+        </tbody></table>
+      </div>
+      <div class="sub-pane" id="sp-inventory-component">
+        <table class="inv-tbl"><thead><tr><th>Component</th><th>For</th><th>Consumed?</th><th>Notes</th></tr></thead><tbody>
+          <tr><td>Arcane Focus (Orb)</td><td>All Warlock spells</td><td>No</td><td>Replaces material components without cost</td></tr>
+        </tbody></table>
+      </div>
+      <div class="sub-pane" id="sp-inventory-attunement">
+        <p style="padding:12px;color:var(--g500);font-style:italic;">No attuned items. (Max 3 items)</p>
+      </div>
+      <div class="sub-pane" id="sp-inventory-other">
+        <table class="inv-tbl"><thead><tr><th>Item</th><th>Qty</th><th>Notes</th><th></th></tr></thead><tbody>
+          <tr><td>Gold Pieces</td><td>48</td><td>Currency</td><td></td></tr>
+          <tr><td>Silver Pieces</td><td>12</td><td>Currency</td><td></td></tr>
+          <tr><td>Mysterious Black Tome</td><td>1</td><td>The book Raylock first contacted his patron through. Seems to rewrite itself.</td><td></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <!-- ═══ FEATURES & TRAITS ═══ -->
+    <div class="main-pane" id="mp-features">
+      <div class="sub-tab-bar">
+        <div class="stab active" data-group="features" data-sub="all">All</div>
+        <div class="stab" data-group="features" data-sub="class">Class Features</div>
+        <div class="stab" data-group="features" data-sub="species">Species &amp; Traits</div>
+        <div class="stab" data-group="features" data-sub="feats">Feats</div>
+      </div>
+      <div class="sub-pane active" id="sp-features-all">
+        <div class="sec-hd">Class Features — Warlock 5</div>
+        <div class="feat"><h4>Pact Magic</h4><p>2 spell slots of 3rd level. All slots recover on a short or long rest.</p></div>
+        <div class="feat"><h4>Eldritch Invocations</h4><p><strong>Agonizing Blast</strong> — Add CHA modifier (+4) to each Eldritch Blast beam.<br><strong>Devil's Sight</strong> — See in magical darkness up to 120 ft. Pairs with Darkness spell.</p></div>
+        <div class="feat"><h4>Pact Boon — Pact of the Tome</h4><p>Book of Shadows grants three additional cantrips from any class spell list. Cantrips are lost if the tome is lost but can be re-created with a 1 hour ritual costing 50 gp in components.</p></div>
+        <div class="feat"><h4>Awakened Mind</h4><p>Telepathically speak to any creature you can see within 30 ft. The creature doesn't need to share a language. It cannot respond this way unless it has telepathy of its own.</p></div>
+        <div class="feat"><h4>Otherworldly Patron — The Great Old One</h4><p>Your patron is a mysterious entity of the Far Realm. Extended Spell List includes Dissonant Whispers, Tassha's Hideous Laughter, Detect Thoughts, Phantasmal Force, Clairvoyance, and Sending.</p></div>
+        <div class="sec-hd">Species &amp; Racial Traits — Tiefling</div>
+        <div class="feat"><h4>Darkvision</h4><p>See in dim light as bright light, and darkness as dim light, up to 60 ft.</p></div>
+        <div class="feat"><h4>Hellish Resistance</h4><p>Resistance to fire damage.</p></div>
+        <div class="feat"><h4>Infernal Legacy</h4><p>Know Thaumaturgy cantrip. At level 3: Hellish Rebuke 1/day. At level 5: Darkness 1/day. Spellcasting ability: Intelligence.</p></div>
+        <div class="sec-hd">Feats</div>
+        <p style="padding:8px 12px;color:var(--g500);font-style:italic;font-size:12px">No feats taken.</p>
+      </div>
+      <div class="sub-pane" id="sp-features-class">
+        <div class="feat"><h4>Pact Magic</h4><p>2 spell slots of 3rd level. Recover on short or long rest.</p></div>
+        <div class="feat"><h4>Eldritch Invocations</h4><p>Agonizing Blast (+4 damage per beam) · Devil's Sight (magical darkness 120 ft)</p></div>
+        <div class="feat"><h4>Pact Boon — Pact of the Tome</h4><p>Book of Shadows grants 3 additional cantrips from any class list.</p></div>
+        <div class="feat"><h4>Awakened Mind</h4><p>Telepathy 30 ft to any visible creature. No shared language needed.</p></div>
+        <div class="feat"><h4>Otherworldly Patron — The Great Old One</h4><p>Far Realm entity. Expanded spell list. Entity's motives are unknowable.</p></div>
+      </div>
+      <div class="sub-pane" id="sp-features-species">
+        <div class="feat"><h4>Darkvision</h4><p>60 ft. Dim light → bright light. Darkness → dim light.</p></div>
+        <div class="feat"><h4>Hellish Resistance</h4><p>Resistance to fire damage.</p></div>
+        <div class="feat"><h4>Infernal Legacy</h4><p>Thaumaturgy (cantrip) · Hellish Rebuke 1/day (3rd lvl) · Darkness 1/day (5th lvl)</p></div>
+      </div>
+      <div class="sub-pane" id="sp-features-feats">
+        <p style="padding:12px;color:var(--g500);font-style:italic;">No feats taken.</p>
+      </div>
+    </div>
+
+    <!-- ═══ BACKGROUND ═══ -->
+    <div class="main-pane" id="mp-background">
+      <div class="sub-tab-bar">
+        <div class="stab active" data-group="background" data-sub="characteristics">Characteristics</div>
+        <div class="stab" data-group="background" data-sub="appearance">Appearance</div>
+      </div>
+      <div class="sub-pane active" id="sp-background-characteristics">
+        <div class="bg-block"><h4>Background — Sage</h4><p>Raylock spent years cataloguing forbidden texts in an ancient library before his patron made contact through the margins of a crumbling tome. He still smells faintly of old parchment and regret.</p></div>
+        <div class="bg-block"><h4>Personality Traits</h4><p>I use polysyllabic words that convey the impression of great erudition. I'm used to helping out those who aren't as smart as I am, and I do so in a way that makes them feel slow.</p></div>
+        <div class="bg-block"><h4>Ideals</h4><p><em>Knowledge.</em> The path to power and self-improvement is through knowledge. No price is too high for the right information.</p></div>
+        <div class="bg-block"><h4>Bonds</h4><p>My patron gave me power when I was powerless. I owe it everything — even if I'm not entirely sure what it wants in return.</p></div>
+        <div class="bg-block"><h4>Flaws</h4><p>I speak without thinking and regularly insult people without even noticing. I also have an obsessive need to understand things I cannot explain.</p></div>
+        <div class="bg-block"><h4>Feature — Researcher</h4><p>When you attempt to learn or recall lore, if you don't know the information, you usually know where and from whom you can obtain it — a library, a sage, a forbidden text.</p></div>
+      </div>
+      <div class="sub-pane" id="sp-background-appearance">
+        <div class="appearance-grid">
+          <div class="app-field"><label>Age</label><span>28</span></div>
+          <div class="app-field"><label>Height</label><span>5'11"</span></div>
+          <div class="app-field"><label>Weight</label><span>160 lb</span></div>
+          <div class="app-field"><label>Eyes</label><span>Solid gold, no pupils</span></div>
+          <div class="app-field"><label>Skin</label><span>Deep crimson</span></div>
+          <div class="app-field"><label>Hair</label><span>Black, swept back</span></div>
+          <div class="app-field"><label>Gender</label><span>Male</span></div>
+          <div class="app-field"><label>Alignment</label><span>Chaotic Neutral</span></div>
+        </div>
+        <div class="bg-block" style="margin-top:4px"><h4>Description</h4><p>Raylock is tall and lean with the typical infernal features of a Tiefling — small curved horns, a pointed tail, and solid golden eyes that seem to absorb light rather than reflect it. He dresses in dark scholarly robes and carries a black leather satchel stuffed with notes and loose pages.</p></div>
+      </div>
+    </div>
+
+    <!-- ═══ NOTES ═══ -->
+    <div class="main-pane" id="mp-notes">
+      <div class="sub-tab-bar">
+        <div class="stab active" data-group="notes" data-sub="all">All</div>
+        <div class="stab" data-group="notes" data-sub="orgs">Organizations</div>
+        <div class="stab" data-group="notes" data-sub="allies">Allies</div>
+        <div class="stab" data-group="notes" data-sub="enemies">Enemies</div>
+        <div class="stab" data-group="notes" data-sub="backstory">Backstory</div>
+        <div class="stab" data-group="notes" data-sub="other">Other</div>
+      </div>
+      <div class="sub-pane active" id="sp-notes-all">
+        <div class="sec-hd">Session Notes</div>
+        <textarea class="notes-area" placeholder="Write your session notes here…"></textarea>
+      </div>
+      <div class="sub-pane" id="sp-notes-orgs">
+        <div class="bg-block"><h4>The Arcane Collective</h4><p>A loose network of scholars and mages Raylock once studied with. Relations are strained since his pact became known — some fear him, others want to study him.</p></div>
+        <textarea class="notes-area" style="margin-top:10px" placeholder="Add organization notes…"></textarea>
+      </div>
+      <div class="sub-pane" id="sp-notes-allies">
+        <div class="bg-block"><h4>Mirabel Ashcroft</h4><p>A halfling cleric of Ioun. She doesn't trust Raylock's patron but trusts Raylock himself — for now. Helped him escape a bounty hunter last spring.</p></div>
+        <textarea class="notes-area" style="margin-top:10px" placeholder="Add ally notes…"></textarea>
+      </div>
+      <div class="sub-pane" id="sp-notes-enemies">
+        <div class="bg-block"><h4>Inquisitor Valdris</h4><p>A zealot witch-hunter who believes all warlock pacts are inherently corrupt. He has Raylock's name on a wanted list. Last seen in the city of Thornwall.</p></div>
+        <textarea class="notes-area" style="margin-top:10px" placeholder="Add enemy notes…"></textarea>
+      </div>
+      <div class="sub-pane" id="sp-notes-backstory">
+        <div class="bg-block"><h4>Origin</h4><p>Raylock grew up in a mid-sized city as the son of a disgraced nobleman and a tiefling scholar. His mixed heritage made him an outsider in both worlds. He found solace in libraries, particularly in a restricted archive beneath the city's university.</p></div>
+        <div class="bg-block"><h4>The Pact</h4><p>At age 23, Raylock discovered a tome written in a language that didn't exist — yet he could read it perfectly. Over the following weeks, words began appearing in the margins responding to his own notes. By the time he realized what was happening, the pact was already complete.</p></div>
+        <div class="bg-block"><h4>Present Day</h4><p>Raylock travels as a freelance researcher and occasional problem-solver, using his eldritch powers carefully and his intellect constantly. He still doesn't know exactly what his patron wants.</p></div>
+      </div>
+      <div class="sub-pane" id="sp-notes-other">
+        <textarea class="notes-area" placeholder="Other notes, miscellaneous details…"></textarea>
+      </div>
+    </div>
+
+    <!-- ═══ EXTRAS ═══ -->
+    <div class="main-pane" id="mp-extras">
+      <div class="sub-tab-bar">
+        <div class="stab active" data-group="extras" data-sub="all">All</div>
+        <div class="stab" data-group="extras" data-sub="actions">Additional Actions</div>
+        <div class="stab" data-group="extras" data-sub="special">Special Senses</div>
+      </div>
+      <div class="sub-pane active" id="sp-extras-all">
+        <div class="sec-hd">Special Senses</div>
+        <div class="feat"><h4>Darkvision — 60 ft</h4><p>Tiefling racial. See in darkness as dim light.</p></div>
+        <div class="feat"><h4>Devil's Sight — 120 ft</h4><p>Warlock invocation. See normally in both magical and nonmagical darkness.</p></div>
+        <div class="sec-hd">Resistances &amp; Immunities</div>
+        <div class="feat"><h4>Fire Resistance</h4><p>Tiefling racial — Hellish Resistance. Take half damage from fire.</p></div>
+      </div>
+      <div class="sub-pane" id="sp-extras-actions">
+        <div class="feat"><h4>Two-Weapon Fighting</h4><p>When you take the Attack action with a light weapon, you can use a bonus action to attack with a different light weapon (no ability modifier to damage).</p></div>
+      </div>
+      <div class="sub-pane" id="sp-extras-special">
+        <div class="feat"><h4>Darkvision — 60 ft</h4><p>Dim light as bright, darkness as dim light.</p></div>
+        <div class="feat"><h4>Devil's Sight — 120 ft</h4><p>Magical and non-magical darkness treated as normal vision.</p></div>
+      </div>
+    </div>
+
+  </div><!-- /tab-card -->
+
+  <!-- COL 4 Sidebar -->
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    <div class="card"><div class="card-hd">Conditions</div><div class="cond-empty">No active conditions</div></div>
+    <div class="card"><div class="card-hd">Proficiencies &amp; Training</div><div class="tags"><span class="tag">Light Armor</span><span class="tag">Simple Weapons</span><span class="tag">Daggers</span><span class="tag">Quarterstaffs</span><span class="tag">Calligrapher's Supplies</span><span class="tag">Common</span><span class="tag">Infernal</span><span class="tag">Abyssal</span></div></div>
+    <div class="card"><div class="card-hd">Senses</div><div class="st-row"><div class="st-lbl">Darkvision</div><div class="st-val">60 ft</div></div><div class="st-row"><div class="st-lbl">Devil's Sight</div><div class="st-val">120 ft</div></div></div>
+    <div class="card"><div class="card-hd">Death Saves</div><div class="death-row"><div class="death-lbl">Successes</div><div class="d-pip s"></div><div class="d-pip s"></div><div class="d-pip s"></div></div><div class="death-row"><div class="death-lbl">Failures</div><div class="d-pip f"></div><div class="d-pip f"></div><div class="d-pip f"></div></div></div>
+  </div>
+
+</div><!-- /sheet -->
+
+<script>
+  // Main tabs
+  document.querySelectorAll('.mtab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = btn.dataset.main;
+      document.querySelectorAll('.mtab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.main-pane').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('mp-' + t).classList.add('active');
+    });
+  });
+
+  // Sub tabs
+  document.querySelectorAll('.stab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const group = btn.dataset.group;
+      const sub   = btn.dataset.sub;
+      // Deactivate all stabs in same group
+      document.querySelectorAll(`.stab[data-group="${group}"]`).forEach(b => b.classList.remove('active'));
+      // Deactivate all sub-panes in same group
+      document.querySelectorAll(`[id^="sp-${group}-"]`).forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(`sp-${group}-${sub}`).classList.add('active');
+    });
+  });
+
+  // Spell search
+  const spellSearch = document.getElementById('spell-search');
+  if (spellSearch) {
+    spellSearch.addEventListener('input', () => {
+      const q = spellSearch.value.toLowerCase();
+      document.querySelectorAll('#spell-list .spell-item').forEach(el => {
+        el.style.display = el.dataset.spellName.includes(q) ? '' : 'none';
+      });
+      document.querySelectorAll('#spell-list .sec-hd').forEach(hd => {
+        hd.style.display = '';
+      });
+    });
+  }
+
+  // Inventory search
+  const invSearch = document.getElementById('inv-search');
+  if (invSearch) {
+    invSearch.addEventListener('input', () => {
+      const q = invSearch.value.toLowerCase();
+      document.querySelectorAll('#inv-list tbody tr').forEach(row => {
+        row.style.display = row.dataset.item && row.dataset.item.includes(q) ? '' : (q ? 'none' : '');
+      });
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+# Environment variables (contains secrets — never upload these)
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Modal
+.modal/
+
+# OS files
+.DS_Store
+Thumbs.db
