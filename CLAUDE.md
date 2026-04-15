@@ -95,20 +95,51 @@ Continue iterating on `index.html`. Andy will share browser screenshots; refine 
 
 ---
 
-## GitHub — What Andy Needs to Know
+## GitHub — Setup (Already Done)
 
-Andy's GitHub username is **Brumshack**. He has an account but is new to git. When the time comes, explain it like this:
+Andy's GitHub username is **Brumshack**.
 
-**GitHub** is like Google Drive for code. A **repository (repo)** is a folder that GitHub tracks — every change you make is saved with a description of what changed, so you can always go back. **Pushing** just means uploading your latest changes from your computer to GitHub.
+The repository is live at: **https://github.com/Brumshack/dnd-character-sheet**
 
-**Steps when we're ready**:
-1. Install Git: https://git-scm.com/download/win
-2. In PowerShell: `git init` → `git add .` → `git commit -m "first commit"`
-3. Create a new repo on github.com (no README, no .gitignore)
-4. Follow GitHub's instructions to push: `git remote add origin <url>` → `git push -u origin main`
-5. For hosting: go to repo Settings → Pages → Source: main branch → Save
+GitHub Pages (public URL for the sheet): **https://brumshack.github.io/dnd-character-sheet**
+(Enable in repo Settings → Pages → Branch: master, if not already on)
 
-Always walk Andy through each command one at a time. Don't give him a wall of commands to paste at once.
+Git is configured globally on Andy's machine:
+- `user.name` = Brumshack
+- `user.email` = andybrumlow@gmail.com
+- GitHub CLI (`gh`) is installed and authenticated
+
+**Everything is set up — no further configuration needed.**
+
+---
+
+## Git Workflow (Do This Every Session)
+
+After every meaningful set of changes, run these three commands:
+
+```bash
+cd "/c/Users/abrum/OneDrive/Documents/D&D/Character Webiste Project"
+git add .
+git commit -m "descriptive message about what changed"
+git push
+```
+
+**Rules for commit messages:**
+- Be specific: `"Add clickable HP tracker"` not `"update"`
+- Present tense: `"Add..."`, `"Fix..."`, `"Update..."`, `"Remove..."`
+- Examples:
+  - `"Add interactive spell slot pips"`
+  - `"Fix skills list alignment"`
+  - `"Update CLAUDE.md with Phase 2 roadmap"`
+  - `"Convert sheet to blank editable character template"`
+
+**When to commit:**
+- After any feature is complete
+- After any significant visual change
+- After updating CLAUDE.md
+- Before ending a session (always leave GitHub in sync)
+
+Claude should run `git add . && git commit -m "..." && git push` automatically after completing work each session — don't wait for Andy to ask.
 
 ---
 
@@ -140,7 +171,8 @@ The `modal_app.py` file has a `character_stats` endpoint stub that calculates ab
 2. Read `index.html` to remind yourself of the current code state
 3. Ask Andy: *"What would you like to work on today?"*
 4. Build → show result → iterate based on his screenshot feedback
-5. Update this CLAUDE.md if anything significant changes (new features added, phase completed, etc.)
+5. **After every meaningful change: commit and push to GitHub** (see Git workflow below)
+6. Update this CLAUDE.md if anything significant changes (new features added, phase completed, etc.), then commit and push that too
 
 ---
 
