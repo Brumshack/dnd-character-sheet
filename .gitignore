@@ -12,3 +12,8 @@ __pycache__/
 # OS files
 .DS_Store
 Thumbs.db
+node_modules/
+package.json
+package-lock.json
+screenshot.js
+screenshot.png
