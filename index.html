@@ -27,46 +27,72 @@
 
     /* ── Header ── */
     .char-header { background: var(--bg); border-bottom: 3px solid var(--red); padding: 10px 20px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-    .portrait { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--red), #6b1010); border: 2px solid var(--g300); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+    .portrait { width: 68px; height: 68px; border-radius: 50%; background: linear-gradient(145deg, #8a1010, var(--red), #c84040); border: 3px solid var(--red); display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: var(--cond); font-weight: 700; color: rgba(255,255,255,0.9); letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0; box-shadow: 0 2px 8px rgba(197,49,49,0.4); }
     .char-info h1 { font-family: var(--cond); font-size: 21px; font-weight: 700; }
     .char-info .meta { font-size: 12px; color: var(--g500); margin-top: 2px; }
     .char-info .meta strong { color: var(--g700); }
-    .hstats { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
-    .hs { border: 1px solid var(--g300); border-radius: 4px; background: var(--bg); min-width: 62px; text-align: center; padding: 5px 10px 7px; }
-    .hs.hp-box { border-color: var(--red); }
-    .hs .v { font-family: var(--cond); font-size: 21px; font-weight: 700; line-height: 1; }
-    .hs.hp-box .v { color: var(--red); }
+    .hstats { display: flex; gap: 8px; margin-left: auto; flex-wrap: wrap; align-items: center; }
+    .hs { border: 1.5px solid var(--g300); border-radius: 6px; background: var(--bg); min-width: 68px; text-align: center; padding: 6px 12px 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.07); }
+    .hs.hp-box { border-color: var(--red); background: rgba(197,49,49,0.04); }
+    .hs .v { font-family: var(--cond); font-size: 24px; font-weight: 700; line-height: 1; }
+    .hs.hp-box .v { color: var(--red); font-size: 26px; }
     .hs .l { font-family: var(--cond); font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--g500); margin-top: 3px; }
-    .hp-row { background: var(--bg); border-bottom: 1px solid var(--g200); padding: 6px 20px 9px; display: flex; align-items: center; gap: 12px; }
+    .hp-row { background: var(--bg); border-bottom: 2px solid var(--g200); padding: 7px 20px 10px; display: flex; align-items: center; gap: 14px; }
     .hp-lbl { font-family: var(--cond); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--g500); width: 60px; flex-shrink: 0; }
-    .hp-track { flex: 1; height: 12px; background: var(--g100); border-radius: 6px; overflow: hidden; border: 1px solid var(--g300); }
-    .hp-fill { height: 100%; background: linear-gradient(90deg, #a7080b, var(--red)); border-radius: 6px; }
-    .hp-txt { font-family: var(--cond); font-size: 13px; font-weight: 700; color: var(--red); white-space: nowrap; }
+    .hp-track { flex: 1; height: 14px; background: var(--g100); border-radius: 7px; overflow: hidden; border: 1px solid var(--g300); }
+    .hp-fill { height: 100%; background: linear-gradient(90deg, #8a0609, var(--red), #e84040); border-radius: 7px; position: relative; }
+    .hp-fill::after { content: ''; position: absolute; top: 2px; left: 4px; right: 4px; height: 4px; background: rgba(255,255,255,0.25); border-radius: 3px; }
+    .hp-txt { font-family: var(--cond); font-size: 15px; font-weight: 700; color: var(--red); white-space: nowrap; }
 
     /* ── Card with red artistic border ── */
     .card { background: var(--bg); border: 1px solid rgba(197,49,49,0.45); border-radius: 5px; overflow: hidden; box-shadow: 0 0 0 2px rgba(197,49,49,0.08), 0 1px 4px rgba(0,0,0,0.08); position: relative; }
     .card::before, .card::after { content: ''; position: absolute; width: 10px; height: 10px; border-color: var(--red); border-style: solid; pointer-events: none; z-index: 1; }
     .card::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; border-radius: 4px 0 0 0; }
     .card::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; border-radius: 0 0 4px 0; }
-    .card-hd { background: var(--g900); color: #fff; font-family: var(--cond); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 6px 10px; border-bottom: 2px solid var(--red); }
+    .card-hd { background: var(--g900); color: #fff; font-family: var(--cond); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 6px 10px 6px 12px; border-bottom: 2px solid var(--red); border-left: 3px solid var(--red); }
 
     /* ── Sheet layout ── */
     .sheet { max-width: 1320px; margin: 14px auto; padding: 0 14px; display: grid; grid-template-columns: 210px 220px 1fr 240px; gap: 12px; align-items: start; }
 
-    /* ── Ability score grid (2×3, D&D Beyond style) ── */
-    .ab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px; }
-    .ab-cell { border: 1px solid var(--g200); border-radius: 4px; padding: 8px 6px 6px; text-align: center; background: var(--bg); transition: background .1s; cursor: default; }
+    /* ── Ability score grid (2×3, D&D Beyond shield style) ── */
+    .ab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px 10px 24px; }
+    .ab-cell {
+      border: 1.5px solid var(--g300);
+      border-bottom: none;
+      border-radius: 5px 5px 0 0;
+      padding: 8px 4px 11px;
+      text-align: center;
+      background: var(--bg);
+      position: relative;
+      transition: background .1s;
+      cursor: default;
+    }
     .ab-cell:hover { background: var(--g50); }
+    /* Pentagon diamond point at bottom */
+    .ab-cell::after {
+      content: '';
+      position: absolute;
+      bottom: -9px;
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+      width: 16px;
+      height: 16px;
+      background: var(--bg);
+      border-right: 1.5px solid var(--g300);
+      border-bottom: 1.5px solid var(--g300);
+      transition: background .1s;
+    }
+    .ab-cell:hover::after { background: var(--g50); }
     .ab-nm { font-family: var(--cond); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--g500); }
-    .ab-mod { font-family: var(--cond); font-size: 26px; font-weight: 700; line-height: 1.1; margin: 3px 0; }
+    .ab-mod { font-family: var(--cond); font-size: 28px; font-weight: 700; line-height: 1.1; margin: 4px 0; }
     .pos { color: var(--green); } .neg { color: var(--red); } .zero { color: var(--g700); }
     .ab-score-box { display: inline-block; border: 1px solid var(--g300); border-radius: 3px; padding: 1px 10px; font-family: var(--cond); font-size: 13px; font-weight: 700; background: var(--g50); min-width: 34px; }
-    .ab-save-row { display: flex; justify-content: center; align-items: center; gap: 4px; margin-top: 5px; font-family: var(--cond); font-size: 10px; color: var(--g600); border-top: 1px solid var(--g100); padding-top: 5px; }
+    .ab-save-row { display: flex; justify-content: center; align-items: center; gap: 4px; margin-top: 6px; font-family: var(--cond); font-size: 10px; color: var(--g600); border-top: 1px solid var(--g100); padding-top: 5px; }
     .sv-dot { width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--g400); flex-shrink: 0; }
     .sv-dot.p { background: var(--red); border-color: var(--red); }
 
     /* ── Skill rows ── */
-    .sk-row { display: flex; align-items: center; padding: 4px 10px; gap: 7px; font-size: 12px; border-bottom: 1px solid var(--g100); transition: background .1s; }
+    .sk-row { display: flex; align-items: center; padding: 3px 10px; gap: 6px; font-size: 11px; border-bottom: 1px solid var(--g100); transition: background .1s; }
     .sk-row:last-child { border-bottom: none; }
     .sk-row:hover { background: var(--g50); }
     .sk-dot { width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--g300); flex-shrink: 0; }
@@ -74,9 +100,9 @@
     .sk-val { font-family: var(--cond); font-weight: 700; font-size: 12px; width: 24px; text-align: right; flex-shrink: 0; }
     .sk-nm { flex: 1; color: var(--g700); }
     .sk-ab { font-size: 9px; color: var(--g400); text-transform: uppercase; font-family: var(--cond); }
-    .passive { display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; border-top: 1px solid var(--g200); background: var(--g50); }
+    .passive { display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; border-top: 2px solid var(--g200); background: rgba(197,49,49,0.04); }
     .passive .lbl { font-family: var(--cond); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--g500); }
-    .passive .val { font-family: var(--cond); font-size: 17px; font-weight: 700; }
+    .passive .val { font-family: var(--cond); font-size: 19px; font-weight: 700; color: var(--red); }
 
     /* ── Stat rows ── */
     .st-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; border-bottom: 1px solid var(--g100); }
@@ -85,11 +111,12 @@
     .st-val { font-family: var(--cond); font-size: 15px; font-weight: 700; }
 
     /* ── Spell slots ── */
-    .ss-grid { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .ss-grid { padding: 10px; display: flex; flex-direction: column; gap: 10px; }
     .ss-row { display: flex; align-items: center; gap: 8px; }
     .ss-lbl { font-family: var(--cond); font-size: 11px; color: var(--g500); text-transform: uppercase; width: 52px; flex-shrink: 0; }
-    .ss-pip { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--purple); background: var(--purple); cursor: pointer; transition: background .15s; }
-    .ss-pip.used { background: transparent; }
+    .ss-pip { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--purple); background: var(--purple); cursor: pointer; transition: all .15s; box-shadow: 0 0 0 2px rgba(142,68,173,0.15); }
+    .ss-pip:hover { transform: scale(1.1); }
+    .ss-pip.used { background: transparent; box-shadow: none; }
 
     /* ── Tags ── */
     .tags { padding: 10px; display: flex; flex-wrap: wrap; gap: 4px; }
@@ -125,30 +152,30 @@
     /* ════════════════════════════════════════
        SUB TABS (nested inside each main pane)
     ════════════════════════════════════════ */
-    .sub-tab-bar { display: flex; gap: 2px; padding: 8px 12px 0; border-bottom: 1px solid var(--g200); background: var(--bg); flex-wrap: wrap; }
-    .stab { padding: 5px 12px; font-family: var(--cond); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--g500); cursor: pointer; border-radius: 3px 3px 0 0; border: 1px solid transparent; border-bottom: none; transition: all .15s; user-select: none; margin-bottom: -1px; }
+    .sub-tab-bar { display: flex; gap: 2px; padding: 8px 10px 0; border-bottom: 1px solid var(--g200); background: rgba(197,49,49,0.02); flex-wrap: wrap; }
+    .stab { padding: 5px 10px; font-family: var(--cond); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--g400); cursor: pointer; border-radius: 3px 3px 0 0; border: 1px solid transparent; border-bottom: none; transition: all .15s; user-select: none; margin-bottom: -1px; }
     .stab:hover { color: var(--g900); background: var(--g100); }
-    .stab.active { color: var(--red); background: var(--bg); border-color: var(--g200); border-bottom-color: var(--bg); }
+    .stab.active { color: var(--red); background: var(--bg); border-color: var(--g200); border-bottom-color: var(--bg); font-weight: 700; }
 
-    .sub-pane { display: none; padding: 12px; }
+    .sub-pane { display: none; padding: 0 12px 12px; }
     .sub-pane.active { display: block; }
 
     /* ── Search bar ── */
-    .search-wrap { margin-bottom: 10px; position: relative; }
+    .search-wrap { margin: 12px 0 10px; position: relative; }
     .search-wrap input { width: 100%; padding: 7px 10px 7px 30px; border: 1px solid var(--g300); border-radius: 4px; font-family: var(--font); font-size: 13px; color: var(--g900); background: var(--g50); outline: none; transition: border-color .15s; }
     .search-wrap input:focus { border-color: var(--red); background: var(--bg); }
     .search-wrap::before { content: '🔍'; position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 12px; pointer-events: none; }
 
     /* ── Attack table ── */
     .atk-tbl { width: 100%; border-collapse: collapse; font-family: var(--cond); }
-    .atk-tbl thead tr { background: var(--g50); border-bottom: 2px solid var(--g200); }
-    .atk-tbl th { padding: 5px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--g500); text-align: left; }
-    .atk-tbl td { padding: 8px 10px; border-bottom: 1px solid var(--g100); font-size: 13px; color: var(--g700); }
+    .atk-tbl thead tr { background: rgba(197,49,49,0.05); border-bottom: 2px solid rgba(197,49,49,0.2); }
+    .atk-tbl th { padding: 6px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--g500); text-align: left; }
+    .atk-tbl td { padding: 9px 10px; border-bottom: 1px solid var(--g100); font-size: 13px; color: var(--g700); }
     .atk-tbl tr:last-child td { border-bottom: none; }
-    .atk-tbl tr:hover td { background: var(--g50); }
-    .atk-nm { font-weight: 700; color: var(--g900); }
-    .atk-hit { color: var(--green); font-weight: 700; font-size: 14px; }
-    .atk-dmg { color: var(--red); font-weight: 700; }
+    .atk-tbl tr:hover td { background: rgba(197,49,49,0.03); }
+    .atk-nm { font-weight: 700; color: var(--g900); font-size: 13px; }
+    .atk-hit { color: var(--green); font-weight: 700; font-size: 15px; }
+    .atk-dmg { color: var(--red); font-weight: 700; font-size: 13px; }
 
     /* ── Feature items ── */
     .feat { padding: 9px 12px; border-bottom: 1px solid var(--g100); }
@@ -190,8 +217,8 @@
     .notes-area:focus { border-color: var(--red); background: var(--bg); }
 
     /* ── Section heading within sub-pane ── */
-    .sec-hd { font-family: var(--cond); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--g500); padding-bottom: 5px; margin-bottom: 6px; border-bottom: 1px solid var(--g200); }
-    .sec-hd:not(:first-child) { margin-top: 14px; }
+    .sec-hd { font-family: var(--cond); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--g600); padding: 6px 12px; margin: 12px -12px 0; border-bottom: 1px solid var(--g200); border-top: 1px solid var(--g200); background: var(--g50); }
+    .sec-hd:first-child { margin-top: 0; }
 
     /* ── Limited use tracker ── */
     .lu-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid var(--g100); }
@@ -216,7 +243,11 @@
     /* ── Proficiency badge in header ── */
     .hs.prof-box { border-color: var(--g900); }
     .hs.prof-box .v { color: var(--g900); }
+    .hs.init-box { border-color: var(--green); background: rgba(30,122,42,0.04); }
     .hs.init-box .v { color: var(--green); }
+
+    /* ── Character name ── */
+    .char-info h1 { font-family: var(--cond); font-size: 23px; font-weight: 700; letter-spacing: 0.3px; }
   </style>
 </head>
 <body>
@@ -225,7 +256,7 @@
 
 <!-- Header -->
 <div class="char-header">
-  <div class="portrait">🧙</div>
+  <div class="portrait">RF</div>
   <div class="char-info">
     <h1>Raylock Flystone</h1>
     <div class="meta"><strong>Tiefling</strong> · <strong>Warlock</strong> (The Great Old One) · <strong>Level 5</strong> &nbsp;·&nbsp; XP: 6,500 / 14,000</div>
@@ -254,7 +285,7 @@
 
   <!-- COL 1 -->
   <div style="display:flex;flex-direction:column;gap:12px;">
-    <div class="card">
+    <div class="card" style="overflow:visible">
       <div class="card-hd">Ability Scores</div>
       <div class="ab-grid">
         <div class="ab-cell">
@@ -302,11 +333,23 @@
       </div>
     </div>
     <div class="card">
-      <div class="card-hd">Combat</div>
-      <div class="st-row"><div class="st-lbl">Max HP</div><div class="st-val">38</div></div>
-      <div class="st-row"><div class="st-lbl">Current HP</div><div class="st-val" style="color:var(--red)">38</div></div>
-      <div class="st-row"><div class="st-lbl">Temp HP</div><div class="st-val">0</div></div>
-      <div class="st-row"><div class="st-lbl">Hit Dice</div><div class="st-val">5d8</div></div>
+      <div class="card-hd">Hit Points &amp; Dice</div>
+      <div style="padding:10px 12px;display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="flex:1;">
+            <div style="font-family:var(--cond);font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--g500);margin-bottom:3px;">Current / Max</div>
+            <div style="font-family:var(--cond);font-size:22px;font-weight:700;color:var(--red);line-height:1;">38 <span style="font-size:14px;color:var(--g400);font-weight:400;">/ 38</span></div>
+          </div>
+          <div style="text-align:center;border:1px solid var(--g200);border-radius:4px;padding:6px 12px;background:var(--g50);">
+            <div style="font-family:var(--cond);font-size:18px;font-weight:700;">5d8</div>
+            <div style="font-family:var(--cond);font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--g500);margin-top:2px;">Hit Dice</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;background:var(--g50);border:1px solid var(--g200);border-radius:4px;padding:6px 10px;">
+          <span style="font-family:var(--cond);font-size:11px;color:var(--g600);">Temp HP</span>
+          <span style="font-family:var(--cond);font-size:16px;font-weight:700;color:var(--g900);">0</span>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -722,6 +765,32 @@
 
   <!-- COL 4 Sidebar -->
   <div style="display:flex;flex-direction:column;gap:12px;">
+
+    <!-- Weapon quick-view (D&D Beyond style) -->
+    <div class="card">
+      <div class="card-hd">Weapons</div>
+      <div style="padding:8px 10px;display:flex;flex-direction:column;gap:6px;">
+        <div style="border:1px solid var(--g200);border-radius:4px;padding:8px 10px;background:var(--g50);">
+          <div style="font-family:var(--cond);font-size:13px;font-weight:700;color:var(--g900);margin-bottom:4px;">Eldritch Blast</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;text-align:center;">
+            <div><div style="font-family:var(--cond);font-size:15px;font-weight:700;color:var(--green);">+7</div><div style="font-family:var(--cond);font-size:8px;text-transform:uppercase;letter-spacing:.8px;color:var(--g400);">To Hit</div></div>
+            <div><div style="font-family:var(--cond);font-size:13px;font-weight:700;color:var(--red);">1d10+4</div><div style="font-family:var(--cond);font-size:8px;text-transform:uppercase;letter-spacing:.8px;color:var(--g400);">Damage</div></div>
+            <div><div style="font-family:var(--cond);font-size:13px;font-weight:700;color:var(--g700);">Force</div><div style="font-family:var(--cond);font-size:8px;text-transform:uppercase;letter-spacing:.8px;color:var(--g400);">Type</div></div>
+          </div>
+          <div style="margin-top:5px;font-size:10px;color:var(--g500);font-family:var(--cond);border-top:1px solid var(--g200);padding-top:4px;">Ranged · 120 ft · 2 beams</div>
+        </div>
+        <div style="border:1px solid var(--g200);border-radius:4px;padding:8px 10px;background:var(--g50);">
+          <div style="font-family:var(--cond);font-size:13px;font-weight:700;color:var(--g900);margin-bottom:4px;">Dagger</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;text-align:center;">
+            <div><div style="font-family:var(--cond);font-size:15px;font-weight:700;color:var(--green);">+5</div><div style="font-family:var(--cond);font-size:8px;text-transform:uppercase;letter-spacing:.8px;color:var(--g400);">To Hit</div></div>
+            <div><div style="font-family:var(--cond);font-size:13px;font-weight:700;color:var(--red);">1d4+2</div><div style="font-family:var(--cond);font-size:8px;text-transform:uppercase;letter-spacing:.8px;color:var(--g400);">Damage</div></div>
+            <div><div style="font-family:var(--cond);font-size:13px;font-weight:700;color:var(--g700);">Pierce</div><div style="font-family:var(--cond);font-size:8px;text-transform:uppercase;letter-spacing:.8px;color:var(--g400);">Type</div></div>
+          </div>
+          <div style="margin-top:5px;font-size:10px;color:var(--g500);font-family:var(--cond);border-top:1px solid var(--g200);padding-top:4px;">Finesse · Thrown 20/60 ft</div>
+        </div>
+      </div>
+    </div>
+
     <div class="card"><div class="card-hd">Conditions</div><div class="cond-empty">No active conditions</div></div>
     <div class="card"><div class="card-hd">Proficiencies &amp; Training</div><div class="tags"><span class="tag">Light Armor</span><span class="tag">Simple Weapons</span><span class="tag">Daggers</span><span class="tag">Quarterstaffs</span><span class="tag">Calligrapher's Supplies</span><span class="tag">Common</span><span class="tag">Infernal</span><span class="tag">Abyssal</span></div></div>
     <div class="card"><div class="card-hd">Senses</div><div class="st-row"><div class="st-lbl">Darkvision</div><div class="st-val">60 ft</div></div><div class="st-row"><div class="st-lbl">Devil's Sight</div><div class="st-val">120 ft</div></div></div>
