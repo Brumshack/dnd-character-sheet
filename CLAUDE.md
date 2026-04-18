@@ -47,16 +47,18 @@ Any player should be able to:
   - **Notes** → sub-tabs: All, Organizations, Allies, Enemies, Backstory, Other
   - **Extras** → Special senses, resistances
 - **Right sidebar**: Conditions, Proficiencies & Training, Senses, Death Saves
-- **Visual style**: white/light background, red (#C53131) accent color from D&D Beyond's actual CSS, Roboto Condensed font, all cards have a subtle red artistic border with corner accent marks
+- **Visual style**: dark theme — dark charcoal page (`#1a1d24`), dark cards (`#24272e`), forest green (`#2d6a4f`) primary accent, Roboto Condensed font, all cards have a subtle green artistic border with corner accent marks
+- **Everything is click-to-edit**: all stats, scores, names, descriptions, table cells, etc.
+- **Add/delete on all lists**: spells, inventory items, attacks, features, limited-use abilities, spell slot levels, senses, weapons, proficiency tags, conditions
+- **Interactive pips**: spell slots, limited-use, death saves all toggle on click; pip +/− controls on spell slots and limited-use rows
+- **HP bar** changes color by health: green (≥66%), yellow (33–65%), red (<33%)
+- **Conditions tracker**: type a condition and click Add; conditions appear as removable pills
+- **Proficiencies & Training**: add new tags, remove existing ones with ×
 
 ### What still needs work on the frontend
-- **All data is still hardcoded** for a placeholder Warlock character — needs to become a blank/editable sheet
-- HP, spell slots, and limited-use pips are not yet interactive/clickable (just visual)
-- No way to edit any values yet — everything needs to be click-to-edit or have an edit mode
-- Death save pips are not clickable
+- **All data is still hardcoded** for a placeholder Warlock character — needs to become a blank/editable sheet (Phase 2)
 - Mobile layout could use more polish
-- Conditions section is empty — no way to add/remove conditions yet
-- Character name, class, race, level, XP, ability scores, etc. all need to be user-editable fields
+- Changes are not persisted — refreshing the page resets everything (Phase 3 backend will fix this)
 
 ### Frontend stack
 - Pure HTML + CSS + vanilla JavaScript (no frameworks, no build tools)
@@ -67,14 +69,11 @@ Any player should be able to:
 
 ## The Roadmap (What Comes Next)
 
-### Phase 1 — Polish the frontend + make it editable (current phase)
-Continue iterating on `index.html`. Andy will share browser screenshots; refine the design based on feedback. Key things still to improve:
-- **Transition to a blank character sheet** — replace all hardcoded Raylock data with empty/placeholder fields
-- Make HP, spell slots, death saves, and limited-use pips **clickable and interactive** (JavaScript)
-- Add **click-to-edit** for all character values (name, scores, HP, etc.) — click a field, type a new value, click away to save
+### Phase 1 — Polish the frontend + make it editable (mostly complete)
+Core editing is done. Remaining Phase 1 items:
+- **Transition to a blank character sheet** — replace all hardcoded Warlock placeholder data with empty fields
 - Improve **mobile responsiveness**
-- Add **conditions tracker** (click to add/remove conditions like Poisoned, Stunned, etc.)
-- General visual polish to get closer to D&D Beyond
+- General visual polish as Andy gives feedback
 
 ### Phase 2 — Multiple characters + JSON data
 - Move character data out of hardcoded HTML into a JavaScript object or JSON file
@@ -113,9 +112,11 @@ Git is configured globally on Andy's machine:
 
 ---
 
-## Git Workflow (Do This Every Session)
+## Git Workflow
 
-After every meaningful set of changes, run these three commands:
+**Only commit and push when Andy explicitly asks.** Do NOT auto-commit or auto-push after edits — running git commands uses tokens each time, and Andy prefers to decide when changes go to GitHub.
+
+When Andy asks to push (e.g., "push this", "commit and push", "save to GitHub"), run:
 
 ```bash
 cd "/c/Users/abrum/OneDrive/Documents/D&D/Character Webiste Project"
@@ -132,14 +133,6 @@ git push
   - `"Fix skills list alignment"`
   - `"Update CLAUDE.md with Phase 2 roadmap"`
   - `"Convert sheet to blank editable character template"`
-
-**When to commit:**
-- After any feature is complete
-- After any significant visual change
-- After updating CLAUDE.md
-- Before ending a session (always leave GitHub in sync)
-
-Claude should run `git add . && git commit -m "..." && git push` automatically after completing work each session — don't wait for Andy to ask.
 
 ---
 
@@ -218,16 +211,16 @@ The `modal_app.py` file has a `character_stats` endpoint stub that calculates ab
 2. Read `index.html` to remind yourself of the current code state
 3. Ask Andy: *"What would you like to work on today?"*
 4. Build → show result → iterate based on his screenshot feedback
-5. **After every meaningful change: commit and push to GitHub** (see Git workflow below)
-6. Update this CLAUDE.md if anything significant changes (new features added, phase completed, etc.), then commit and push that too
+5. Update this CLAUDE.md if anything significant changes (new features added, phase completed, etc.)
+6. **Only commit and push when Andy explicitly asks** (see Git workflow above)
 
 ---
 
 ## Design Rules (Don't Break These)
 
-- **All cards** must have the red artistic border: `border: 1px solid rgba(197,49,49,0.45)` + corner accent pseudo-elements
-- **Color**: `--red: #C53131` is the primary accent. Don't change it.
+- **All cards** must have the green artistic border: `border: 1px solid rgba(45,106,79,0.45)` + corner accent pseudo-elements
+- **Color**: `--red: #2d6a4f` is the primary accent (forest green — the variable is named `--red` for historical reasons, don't rename it). `--neg: #e05252` is used for actual red things (damage dice, negative modifiers).
 - **Font**: Roboto Condensed for labels/headings, Roboto for body text
-- **Background**: white (`#FEFEFE`) main content, light grey (`#f4f5f5`) page background
-- **No dark theme** — the target is D&D Beyond's light mode
+- **Background**: dark theme — `--page: #1a1d24` (page), `--bg: #24272e` (cards)
+- **Text**: `--g900: #e8ecf0` (primary), `--g600: #8d93a0` (secondary/muted)
 - Keep everything in a single `index.html` until Phase 2 when we split into data + template
