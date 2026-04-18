@@ -1,7 +1,15 @@
 {
   "permissions": {
     "allow": [
-      "Bash(gh repo *)"
+      "Bash(gh repo *)",
+      "Bash(py -m playwright --version)",
+      "Bash(py -c \"import selenium\")",
+      "Bash(node screenshot.js)",
+      "Bash(echo \"node_modules/\")",
+      "Bash(echo \"package.json\")",
+      "Bash(echo \"package-lock.json\")",
+      "Bash(echo \"screenshot.js\")",
+      "Bash(echo \"screenshot.png\")"
     ]
   }
 }
